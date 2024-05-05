@@ -8,21 +8,15 @@ function createWorld() {
     speed *= scale;
     joystickSize *= scale;
 
-    let tilesetNames = ["tileset", "tileset2"];
+    // Crear los tilesets
+    let tileset1 = map.addTilesetImage("mainlevbuild", "tiles1");
+    let tileset2 = map.addTilesetImage("decorative", "tiles2");
 
-    // Array que contendrá las referencias a los tilesets
-    let tilesets = [];
-    
-    // Cargar cada tileset y almacenarlo en el array 'tilesets'
-    for (let i = 0; i < tilesetNames.length; i++) {
-        tilesets.push(map.addTilesetImage(tilesetNames[i], tilesetNames[i]));
-    }
     // Parameters: layer name (or index) from Tiled, tileset, x, y
-    belowLayer = map.createLayer("Below Player", tilesets, 0, 0).setScale(scale).setDepth(1);
-    objetLayer = map.createLayer("Object Player", tilesets, 0, 0).setScale(scale).setDepth(1);
-    worldLayer = map.createLayer("World", tilesets, 0, 0).setScale(scale).setDepth(2);
-    aboveLayer = map.createLayer("Above Player", tilesets, 0, 0).setScale(scale).setDepth(3);
-
+    belowLayer = map.createLayer("Bloque", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(1);
+    objetLayer = map.createLayer("Decoracion", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(1);
+    worldLayer = map.createLayer("Suelo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(2);
+    aboveLayer = map.createLayer("Techo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(3);
 
     worldLayer.setCollisionByProperty({ collides: true });
 
@@ -30,25 +24,19 @@ function createWorld() {
     emptyTiles = worldLayer.filterTiles(tile => (tile.index === -1 || !tile.collides));
 }
 
-function createAnims(){
+function createAnims() {
     this.anims.create({
-        key: 'left',
-        frames:
-            this.anims.generateFrameNumbers('player-run', {
-                start: 0, end: 8
-            }),
-            frameRate: 10,
-            repetear: -1
-    })
+        key: "left",
+        frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+        frameRate: 10,
+        repeat: -1
+    });
     this.anims.create({
-        key: 'right',
-        frames:
-            this.anims.generateFrameNumbers('player-run', {
-                start: 8, end: 15
-            }),
-            frameRate: 10,
-            repetear: -1
-    })
+        key: "right",
+        frames: this.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+        frameRate: 10,
+        repeat: -1
+    });
 }
 
 function createPlayer(){
