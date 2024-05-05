@@ -41,7 +41,7 @@ function createAnims() {
 
 function createPlayer(){
         // spawnPont
-        const spawnPoint = map.findObject("Objectos", obj => obj.name === "Player");
+        const spawnPoint = map.findObject("Objetos", obj => obj.name === "Player");
         player = this.physics.add
             .sprite(spawnPoint.x * scale, spawnPoint.y * scale, "player")
             .setSize(16, 24).setOffset(24, 32).setScale(scale)
