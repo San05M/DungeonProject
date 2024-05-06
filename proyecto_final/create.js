@@ -13,15 +13,13 @@ function createWorld() {
     let tileset2 = map.addTilesetImage("decorative", "tiles2");
 
     // Parameters: layer name (or index) from Tiled, tileset, x, y
-    belowLayer = map.createLayer("Bloque", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(1);
-    objetLayer = map.createLayer("Decoracion", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(1);
-    worldLayer = map.createLayer("Suelo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(2);
+    belowLayer = map.createLayer("Bloque", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(2);
+    objetLayer = map.createLayer("Decoracion", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(2);
+    worldLayer = map.createLayer("Suelo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(1);
     aboveLayer = map.createLayer("Techo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(3);
 
-    worldLayer.setCollisionByProperty({ collides: true });
-
-    // Find empty tiles where new zombies, coins or health can be created
-    emptyTiles = worldLayer.filterTiles(tile => (tile.index === -1 || !tile.collides));
+    belowLayer.setCollisionByExclusion([-1]);
+    objetLayer.setCollisionByExclusion([-1]);
 }
 
 function createAnims() {
@@ -44,11 +42,12 @@ function createPlayer(){
         const spawnPoint = map.findObject("Objetos", obj => obj.name === "Player");
         player = this.physics.add
             .sprite(spawnPoint.x * scale, spawnPoint.y * scale, "player")
-            .setSize(16, 24).setOffset(24, 32).setScale(scale)
+            .setSize(6, 16).setOffset(4, 2).setScale(scale)
             .setCollideWorldBounds(true).setDepth(2);
     
         // Watch the player and worldLayer for collisions, for the duration of the scene
-        this.physics.add.collider(player, worldLayer);
+        this.physics.add.collider(player, belowLayer);
+        this.physics.add.collider(player, objetLayer);
     
         const camera = this.cameras.main;
         const world = this.physics.world;
