@@ -83,8 +83,17 @@ function createPlayer(){
         }          
 }
 
+function showScore() {
+    if (!scoreText) {
+        scoreText = this.add.text(screenWidth/2, 16, '', { fontSize: (5 * scale) + 'px', fill: '#FFF' });
+        scoreText.setShadow(3, 3, 'rgba(0,0,0,1)', 3).setOrigin(0.5, 0).setScrollFactor(0).setDepth(4);
+    }
+    scoreText.setText('Pociones:' + score + ' / Vidas:' + lives);
+}
+
 function create(){
     createWorld.call(this);
     createAnims.call(this);
     createPlayer.call(this);
+    showScore.call(this);
 }

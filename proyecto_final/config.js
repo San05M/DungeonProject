@@ -30,4 +30,4 @@ let worldWidth, worldHeight, joystickSize = 30, scale = 1.75, speed = 135;
 let belowLayer, worldLayer, aboveLayer, objetLayer, tileset, tileset2, emptyTiles;
 let map, player, cursors, bell, bell2, dead, timeout;
 let joyStick = joyStick2 = { up: false, down: false, left: false, right: false };
-let score = 0, lives = 5, scoreText = null, gameOver = false;
+let score = 0, lives = 3, scoreText = null, gameOver = false;
