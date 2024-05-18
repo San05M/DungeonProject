@@ -25,6 +25,7 @@ let config = {
 };
 
 const game = new Phaser.Game(config);
+
 let worldWidth, worldHeight, joystickSize = 30, scale = 1.75, speed = 135;
 let belowLayer, worldLayer, aboveLayer, objetLayer, tileset, tileset2, emptyTiles;
 let map, player, cursors, bell, bell2, dead, timeout;

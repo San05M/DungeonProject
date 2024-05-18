@@ -35,6 +35,12 @@ function createAnims() {
         frameRate: 10,
         repeat: -1
     });
+    this.anims.create({
+        key: "idle",
+        frames: this.anims.generateFrameNumbers('player_waiting', { start: 0, end:  5}), // Animación de espera
+        frameRate: 10,
+        repeat: -1
+    });
 }
 
 function createPlayer(){
