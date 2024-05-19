@@ -17,7 +17,7 @@ function update(time, delta) {
 
     // Choose the right player's animation
     if (vX < 0) player.anims.play('left', true);
-    else if (vX > 0) player.anims.play('right', true);    
+    else if (vX > 0) player.anims.play('right', true);
     else {
         player.setVelocityX(0);
         player.anims.play('idle', true);
