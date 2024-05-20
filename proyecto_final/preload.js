@@ -6,6 +6,8 @@ function preload() {
     this.load.image("tiles2", "assets/decorative.png");
     this.load.image("heart", "assets/heart.png");
     this.load.image("potionScore", "assets/potionScore.png");
+    this.load.image("potionScoreHalf", "assets/potionScoreHalf.png");
+    this.load.image("potionScoreEmpty", "assets/potionScoreEmpty.png");
     this.load.spritesheet("player_waiting", "assets/player_waiting.png", { frameWidth: 16, frameHeight: 24 });
     this.load.spritesheet("potion", "assets/potionObject.png", { frameWidth: 16, frameHeight: 16 });
 }

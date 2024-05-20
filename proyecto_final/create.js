@@ -92,15 +92,20 @@ function createPlayer() {
 }
 
 function showScore() {
-    if (!scoreText) {
-        potionIcon = this.add.image(screenWidth / 2 - 50, 16, "potionScore").setScale(scale).setScrollFactor(0).setDepth(4);
-        heartIcon = this.add.image(screenWidth / 2 + 50, 16, "heart").setScale(scale).setScrollFactor(0).setDepth(4);
+    let potionImage = "potionScoreEmpty";
+    if (score >= 5 && score < 10) potionImage = "potionScoreHalf";
+    else if (score >= 10) potionImage = "potionScore";
 
+    if (potionIcon) potionIcon.destroy();
+    
+    potionIcon = this.add.image(screenWidth / 2 - 50, 16, potionImage).setScale(scale).setScrollFactor(0).setDepth(4);
+    heartIcon = this.add.image(screenWidth / 2 + 50, 16, "heart").setScale(scale).setScrollFactor(0).setDepth(4);
+
+    if (!scoreText) {
         scoreText = this.add.text(screenWidth / 2, 16, '', { fontSize: (5 * scale) + 'px', fill: '#FFF' });
         scoreText.setShadow(3, 3, 'rgba(0,0,0,1)', 3).setOrigin(0.5, 0).setScrollFactor(0).setDepth(4);
     }
-    potionIcon.setFrame(score);
-    heartIcon.setFrame(lives);
+
     scoreText.setText(score + ' - ' + lives);
 }
 
@@ -122,7 +127,7 @@ function collectPotion(player, potion) {
     createPotion.call(this);
 
     score += 1;
-    showScore();
+    showScore.call(this);
 }
 
 function create() {
