@@ -27,19 +27,19 @@ function createWorld() {
 function createAnims() {
     this.anims.create({
         key: "left",
-        frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+        frames: this.anims.generateFrameNumbers('playerLeftRun', { start: 0, end: 7 }),
         frameRate: 10,
         repeat: -1
     });
     this.anims.create({
         key: "right",
-        frames: this.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+        frames: this.anims.generateFrameNumbers('playerRightRun', { start: 0, end: 7 }),
         frameRate: 10,
         repeat: -1
     });
     this.anims.create({
         key: "idle",
-        frames: this.anims.generateFrameNumbers('player_waiting', { start: 0, end: 4 }), // Animación de espera
+        frames: this.anims.generateFrameNumbers('playerWaiting', { start: 0, end: 5 }), // Animación de espera
         frameRate: 10,
         repeat: -1
     });
@@ -49,14 +49,20 @@ function createAnims() {
         frameRate: 10,
         repeat: -1
     });
+    this.anims.create({
+        key: "growing", 
+        frames: this.anims.generateFrameNumbers('potionPower', { start: 0, end: 7 }),
+        frameRate: 10, 
+        repeat: -1,
+    });
 }
 
 function createPlayer() {
     // spawnPont
     const spawnPoint = map.findObject("Objetos", obj => obj.name === "Player");
     player = this.physics.add
-        .sprite(spawnPoint.x * scale, spawnPoint.y * scale, "player")
-        .setSize(6, 16).setOffset(4, 2).setScale(scale)
+        .sprite(spawnPoint.x * scale, spawnPoint.y * scale, "playerRightRun")
+        .setSize(10, 22).setOffset(9, 10).setScale(scale)
         .setCollideWorldBounds(true).setDepth(2);
 
     // Watch the player and worldLayer for collisions, for the duration of the scene
@@ -156,6 +162,26 @@ function collectPotion(player, potion) {
     showScore.call(this);
 }
 
+function createPower() {
+    let power = newObject('potionPower', 'growing', this).setSize(16, 16).setScale(scale * 0.75).setBounce(1);
+    power.body.setAllowGravity(false).setCollideWorldBounds(true);
+    this.physics.add.collider(power, objetLayer, belowLayer);
+    this.physics.add.overlap(player, power, collectPower, null, this);
+}
+
+function protect(color) {
+    player.setTint(color);
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => { timeout = false; player.clearTint() }, 5000);
+}
+
+function collectPower(player, power) {
+    power.destroy();
+    createPower.call(this);
+
+    protect(0xFFFF00);
+}
+
 function create() {
     createWorld.call(this);
     createAnims.call(this);
@@ -163,4 +189,5 @@ function create() {
     showScore.call(this);
 
     for (i = 0; i < numPotion; i++) setTimeout(() => createPotion.call(this), Phaser.Math.Between(0, 5000));
+    for (i = 0; i < numPower; i++) setTimeout(() => createPower.call(this), Phaser.Math.Between(0, 5000));
 }
