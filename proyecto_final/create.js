@@ -92,20 +92,46 @@ function createPlayer() {
 }
 
 function showScore() {
+    // Initialize the potion image variable with a default value
     let potionImage = "potionScoreEmpty";
+
+    // Determine the correct potion image based on the score value
     if (score >= 5 && score < 10) potionImage = "potionScoreHalf";
     else if (score >= 10) potionImage = "potionScore";
 
+    // Destroy the existing potion icon if it exists
     if (potionIcon) potionIcon.destroy();
-    
-    potionIcon = this.add.image(screenWidth / 2 - 50, 16, potionImage).setScale(scale).setScrollFactor(0).setDepth(4);
-    heartIcon = this.add.image(screenWidth / 2 + 50, 16, "heart").setScale(scale).setScrollFactor(0).setDepth(4);
 
+    // Add a new potion icon to the game at specified coordinates and set its properties
+    potionIcon = this.add.image(0, 5, potionImage)
+        .setScale(scale)  // Set the scale of the image
+        .setOrigin(0.5, 0)  // Set the origin point of the image to the middle of its width and the top of its height
+        .setScrollFactor(0)  // Fix the image in place relative to the camera
+        .setDepth(4);  // Set the depth (layer) of the image
+
+    // Add a heart icon to the game at specified coordinates and set its properties
+    heartIcon = this.add.image(0, 5, "heart")
+        .setScale(scale)  // Set the scale of the image
+        .setOrigin(0.5, 0)  // Set the origin point of the image to the middle of its width and the top of its height
+        .setScrollFactor(0)  // Fix the image in place relative to the camera
+        .setDepth(4);  // Set the depth (layer) of the image
+
+    // Position the potion and heart icons horizontally at the center minus half its width
+    potionIcon.x = screenWidth / 2 - (potionIcon.width * scale);
+    heartIcon.x = screenWidth / 2 + (heartIcon.width * scale);
+
+    // If the score text does not exist, create a new text object to display the score and set its properties
     if (!scoreText) {
-        scoreText = this.add.text(screenWidth / 2, 16, '', { fontSize: (5 * scale) + 'px', fill: '#FFF' });
-        scoreText.setShadow(3, 3, 'rgba(0,0,0,1)', 3).setOrigin(0.5, 0).setScrollFactor(0).setDepth(4);
+        scoreText = this.add.text(screenWidth / 2, (potionIcon.height / 2) * scale + 5, '',
+                                  { fontSize: (5 * scale) + 'px', fill: '#FFF' });
+        
+        scoreText.setShadow(3, 3, 'rgba(0,0,0,1)', 3)  // Add shadow to the text
+            .setOrigin(0.5, 0.5)  // Set the origin point of the text to the center of the text
+            .setScrollFactor(0)  // Fix the text in place relative to the camera
+            .setDepth(4);  // Set the depth (layer) of the text
     }
 
+    // Update the score text with the current score and lives
     scoreText.setText(score + ' - ' + lives);
 }
 
