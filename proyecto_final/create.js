@@ -120,8 +120,8 @@ function showScore() {
     let potionImage = "potionScoreEmpty";
 
     // Determine the correct potion image based on the score value
-    if (score >= 5 && score < 10) potionImage = "potionScoreHalf";
-    else if (score >= 10) potionImage = "potionScore";
+    if (score >= 11 && score < 20) potionImage = "potionScoreHalf";
+    else if (score >= 20) potionImage = "potionScore";
 
     // Destroy the existing potion icon if it exists
     if (potionIcon) potionIcon.destroy();
@@ -174,11 +174,21 @@ function createPotion() {
 }
 
 function collectPotion(player, potion) {
-    potion.destroy();
-    createPotion.call(this);
-
+    
     score += 1;
     showScore.call(this);
+
+    if (score == 30) {
+        this.physics.pause();
+        gameOver = true;
+        this.add.image(screenWidth / 2, screenHeight / 2, 'restart')
+            .setScale(4).setScrollFactor(0).setDepth(4)
+            .setInteractive().on('pointerdown', () => location.reload());
+    }
+    else {
+        potion.destroy();
+        createPotion.call(this);
+    }
 }
 
 function createPoison(){
@@ -190,11 +200,21 @@ function createPoison(){
 }
 
 function collectPoison(player, poison){
-    poison.destroy();
-    createPoison.call(this);
-
+    
     lives -= 1;
     showScore.call(this);
+
+    if (lives == 0) {
+        this.physics.pause();
+        gameOver = true;
+        this.add.image(screenWidth / 2, screenHeight / 2, 'restart')
+            .setScale(4).setScrollFactor(0).setDepth(4)
+            .setInteractive().on('pointerdown', () => location.reload());
+    }
+    else {
+        poison.destroy();
+        createPoison.call(this);
+    }
 }
 
 function createHealt(){

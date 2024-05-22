@@ -1,8 +1,8 @@
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
-const numPotion = 5;
-const numHealth = 5;
-const numPower = 5; // Más adelante.
+const numPotion = 3;
+const numHealth = 3;
+const numPower = 3; // Más adelante.
 const numEnemies = 10; // Más adelante.
 const numFinalBoss = 1; // Implementar
 const numPoison = 2;
