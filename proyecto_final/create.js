@@ -13,15 +13,17 @@ function createWorld() {
     let tileset2 = map.addTilesetImage("decorative", "tiles2");
 
     // Parameters: layer name (or index) from Tiled, tileset, x, y
-    belowLayer = map.createLayer("Bloque", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(2);
-    objectLayer = map.createLayer("Decoracion", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(2);
-    worldLayer = map.createLayer("Suelo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(1);
+    belowLayer = map.createLayer("Bloque", [tileset1, tileset2], 0, 0).setScale(scale).setPipeline("Light2D").setDepth(2); // Light: Enables lighting for the layer
+    objectLayer = map.createLayer("Decoracion", [tileset1, tileset2], 0, 0).setScale(scale).setPipeline("Light2D").setDepth(2); // Light: Enables lighting for the layer
+    worldLayer = map.createLayer("Suelo", [tileset1, tileset2], 0, 0).setScale(scale).setPipeline("Light2D").setDepth(1); // Light: Enables lighting for the layer
     aboveLayer = map.createLayer("Techo", [tileset1, tileset2], 0, 0).setScale(scale).setDepth(3);
 
     belowLayer.setCollisionByExclusion([-1]);
     objectLayer.setCollisionByExclusion([-1]);
 
     emptyTiles = belowLayer.filterTiles(tile => tile.index === -1);
+
+    this.lights.enable().setAmbientColor(0xFFFFFF); // Light: Enables lighting and sets the ambient color to white
 }
 
 function createAnims() {
@@ -50,26 +52,26 @@ function createAnims() {
         repeat: -1
     });
     this.anims.create({
-        key: "growing", 
+        key: "growing",
         frames: this.anims.generateFrameNumbers('potionPower', { start: 0, end: 7 }),
-        frameRate: 10, 
+        frameRate: 10,
         repeat: -1,
     });
     this.anims.create({
         key: "spiderMoving",
         frames: this.anims.generateFrameNumbers('spiderEnemy', { start: 0, end: 3 }),
-        frameRate: 10, 
+        frameRate: 10,
         repeat: -1,
     });
     this.anims.create({
         key: "poisoned",
-        frames: this.anims.generateFrameNumbers('poison', {start: 0, end: 7}),
+        frames: this.anims.generateFrameNumbers('poison', { start: 0, end: 7 }),
         frameRate: 10,
         repeat: -1,
     })
     this.anims.create({
         key: "healthPotion",
-        frams: this.anims.generateFrameNumbers('potionHealt', { start: 0, end: 7}),
+        frams: this.anims.generateFrameNumbers('potionHealt', { start: 0, end: 7 }),
         frameRate: 10,
         repeat: -1,
     })
@@ -82,6 +84,9 @@ function createPlayer() {
         .sprite(spawnPoint.x * scale, spawnPoint.y * scale, "playerRightRun")
         .setSize(10, 22).setOffset(9, 10).setScale(scale)
         .setCollideWorldBounds(true).setDepth(2);
+
+    // Light: Creates a light source at the player's position
+    this.playerLight = this.lights.addLight(spawnPoint.x * scale, spawnPoint.y * scale, 1000, 0xFFFFFF, 5.0);
 
     // Watch the player and worldLayer for collisions, for the duration of the scene
     this.physics.add.collider(player, belowLayer);
@@ -147,8 +152,8 @@ function showScore() {
     // If the score text does not exist, create a new text object to display the score and set its properties
     if (!scoreText) {
         scoreText = this.add.text(screenWidth / 2, (potionIcon.height / 2) * scale + 5, '',
-                                  { fontSize: (5 * scale) + 'px', fill: '#FFF' });
-        
+            { fontSize: (5 * scale) + 'px', fill: '#FFF' });
+
         scoreText.setShadow(3, 3, 'rgba(0,0,0,1)', 3)  // Add shadow to the text
             .setOrigin(0.5, 0.5)  // Set the origin point of the text to the center of the text
             .setScrollFactor(0)  // Fix the text in place relative to the camera
@@ -174,7 +179,7 @@ function createPotion() {
 }
 
 function collectPotion(player, potion) {
-    
+
     score += 1;
     showScore.call(this);
 
@@ -191,7 +196,7 @@ function collectPotion(player, potion) {
     }
 }
 
-function createPoison(){
+function createPoison() {
     let poison = newObject('poison', 'poisoned', this).setSize(16, 16).setScale(0.75 * scale).setBounce(1);
     poison.body.setAllowGravity(false).setCollideWorldBounds(false);
     this.physics.add.collider(poison, objectLayer);
@@ -199,8 +204,8 @@ function createPoison(){
     this.physics.add.overlap(player, poison, collectPoison, null, this);
 }
 
-function collectPoison(player, poison){
-    
+function collectPoison(player, poison) {
+
     lives -= 1;
     showScore.call(this);
 
@@ -217,7 +222,7 @@ function collectPoison(player, poison){
     }
 }
 
-function createHealt(){
+function createHealt() {
     let healt = newObject('potionHealt', 'Healt', this).setSize(16, 16).setScale(0.75 * scale).setBounce(1);
     healt.body.setAllowGravity(false).setCollideWorldBounds(false);
     this.physics.add.collider(healt, objectLayer);
@@ -225,7 +230,7 @@ function createHealt(){
     this.physics.add.overlap(player, healt, collectHealth, null, this);
 }
 
-function collectHealth(player, healt){
+function collectHealth(player, healt) {
     healt.destroy();
     createHealt.call(this);
 
@@ -256,15 +261,16 @@ function collectPower(player, power) {
 
 function createEnemySpider() {
     const v = Phaser.Math.Between(-speed / 4, -speed / 3);
-    let spider = newObject('spiderEnemy', 'spiderMoving', this).setSize(32, 16).setOffset(1, 14).setScale(0.8* scale).setBounce(1).setVelocity(v, 0);
-    spider.body.setAllowGravity(false).setCollideWorldBounds(false);
+    // Light: Illuminate the spider
+    let spider = newObject('spiderEnemy', 'spiderMoving', this).setSize(32, 16).setOffset(1, 14).setScale(0.8 * scale).setBounce(1).setVelocity(v, 0).setPipeline("Light2D").setCollideWorldBounds(true).setDepth(2);
+    spider.body.setAllowGravity(false);
     this.physics.add.collider(spider, objectLayer);
     this.physics.add.collider(spider, belowLayer);
     this.physics.add.overlap(player, spider, hitSpider, null, this);
 }
 
 function hitSpider(player, spider) {
-    
+
     // If the player is already hurt, it cannot be hurt again for a while
     if (player.tintTopLeft == 0xFF0000) return;
 
@@ -284,7 +290,7 @@ function hitSpider(player, spider) {
         spider.destroy();
         createEnemySpider.call(this);
     }
-} 
+}
 
 function create() {
     createWorld.call(this);
@@ -296,5 +302,5 @@ function create() {
     for (i = 0; i < numPoison; i++) setTimeout(() => createPoison.call(this), Phaser.Math.Between(0, 5000));
     for (i = 0; i < numHealth; i++) setTimeout(() => createHealt.call(this), Phaser.Math.Between(0, 5000));
     for (i = 0; i < numPower; i++) setTimeout(() => createPower.call(this), Phaser.Math.Between(0, 5000));
-    for (i = 0; i < numEnemies; i++) setTimeout(() => createEnemySpider.call(this), Phaser.Math.Between(0, 5000)); 
+    for (i = 0; i < numEnemies; i++) setTimeout(() => createEnemySpider.call(this), Phaser.Math.Between(0, 5000));
 }

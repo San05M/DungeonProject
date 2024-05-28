@@ -22,4 +22,9 @@ function update(time, delta) {
         player.setVelocityX(0);
         player.anims.play('idle', true);
     }
+
+    // Light: Update the light following the player
+    if (this.playerLight) {
+        this.playerLight.setPosition(player.x, player.y);
+    }
 }
