@@ -15,5 +15,13 @@ function preload() {
     this.load.spritesheet("potionPower", "assets/potionViolet.png", { frameWidth: 16, frameHeight: 16});
     this.load.spritesheet("potionHealt", "assets/potionRed.png", { frameWidth: 16, frameHeight: 16});
     this.load.spritesheet("spiderEnemy", "assets/spiderEnemy.png", {frameWidth: 32, frameHeight: 32});
-    this.load.image("restart", "assets/restart.png");
+    this.load.image("restart", "assets/finalCartel.png");
+    this.load.spritesheet("playerPorwerLeft", "assets/playerPowerLeft.png", { frameWidth: 48, frameHeight: 48})
+    this.load.spritesheet("playerPorwerRight", "assets/playerPowerRight.png", { frameWidth: 48, frameHeight: 48})
+
+    this.load.audio("music", "assets/backMusic.mp3");
+    this.load.audio("audioRed", "assets/potionRedandYellow.wav");
+    this.load.audio("audioGreen", "assets/potionGreen.wav");
+    this.load.audio("audioViolet", "assets/potionViolet.wav");
+    this.load.audio("audioDamage", "assets/damage.wav");
 }

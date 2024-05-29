@@ -34,6 +34,18 @@ function createAnims() {
         repeat: -1
     });
     this.anims.create({
+        key: "left-power",
+        frames: this.anims.generateFrameNumbers('playerPorwerLeft', { start: 0, end: 4 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
+        key: "right-power",
+        frames: this.anims.generateFrameNumbers('playerPorwerRight', { start: 0, end: 4 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
         key: "right",
         frames: this.anims.generateFrameNumbers('playerRightRun', { start: 0, end: 7 }),
         frameRate: 10,
@@ -179,7 +191,8 @@ function createPotion() {
 }
 
 function collectPotion(player, potion) {
-
+    
+    audioRed.play();
     score += 1;
     showScore.call(this);
 
@@ -187,7 +200,7 @@ function collectPotion(player, potion) {
         this.physics.pause();
         gameOver = true;
         this.add.image(screenWidth / 2, screenHeight / 2, 'restart')
-            .setScale(4).setScrollFactor(0).setDepth(4)
+            .setScale(0.5).setScrollFactor(0).setDepth(4)
             .setInteractive().on('pointerdown', () => location.reload());
     }
     else {
@@ -213,10 +226,11 @@ function collectPoison(player, poison) {
         this.physics.pause();
         gameOver = true;
         this.add.image(screenWidth / 2, screenHeight / 2, 'restart')
-            .setScale(4).setScrollFactor(0).setDepth(4)
+            .setScale(0.5).setScrollFactor(0).setDepth(4)
             .setInteractive().on('pointerdown', () => location.reload());
     }
     else {
+        audioGreen.play();
         poison.destroy();
         createPoison.call(this);
     }
@@ -231,6 +245,7 @@ function createHealt() {
 }
 
 function collectHealth(player, healt) {
+    audioRed.play();
     healt.destroy();
     createHealt.call(this);
 
@@ -253,6 +268,7 @@ function protect(color) {
 }
 
 function collectPower(player, power) {
+    audioViolet.play();
     power.destroy();
     createPower.call(this);
 
@@ -275,6 +291,7 @@ function hitSpider(player, spider) {
     if (player.tintTopLeft == 0xFF0000) return;
 
     if (!timeout) {
+        audioDamage.play();
         protect(0xFF0000);
         lives--;
     }
@@ -283,7 +300,7 @@ function hitSpider(player, spider) {
         this.physics.pause();
         gameOver = true;
         this.add.image(screenWidth / 2, screenHeight / 2, 'restart')
-            .setScale(4).setScrollFactor(0).setDepth(4)
+            .setScale(0.5).setScrollFactor(0).setDepth(4)
             .setInteractive().on('pointerdown', () => location.reload());
     }
     else {
@@ -297,10 +314,19 @@ function create() {
     createAnims.call(this);
     createPlayer.call(this);
     showScore.call(this);
+    initSounds.call(this);
 
     for (i = 0; i < numPotion; i++) setTimeout(() => createPotion.call(this), Phaser.Math.Between(0, 5000));
     for (i = 0; i < numPoison; i++) setTimeout(() => createPoison.call(this), Phaser.Math.Between(0, 5000));
     for (i = 0; i < numHealth; i++) setTimeout(() => createHealt.call(this), Phaser.Math.Between(0, 5000));
     for (i = 0; i < numPower; i++) setTimeout(() => createPower.call(this), Phaser.Math.Between(0, 5000));
     for (i = 0; i < numEnemies; i++) setTimeout(() => createEnemySpider.call(this), Phaser.Math.Between(0, 5000));
+}
+
+function initSounds() {
+    this.sound.add('music', { volume: 0.4 }).play({ loop: -1 });
+    audioRed=this.sound.add('audioRed', { volume: 0.4 });
+    audioDamage=this.sound.add('audioDamage', { volume: 0.4 });
+    audioGreen=this.sound.add('audioGreen', { volume: 0.4 });
+    audioViolet=this.sound.add('audioViolet', { volume: 0.4 });
 }

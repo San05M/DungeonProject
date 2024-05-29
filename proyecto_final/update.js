@@ -16,11 +16,18 @@ function update(time, delta) {
     player.setVelocity(vX, vY).body.velocity.normalize().scale(speed);
 
     // Choose the right player's animation
-    if (vX < 0) player.anims.play('left', true);
-    else if (vX > 0) player.anims.play('right', true);
+    if(vX < 0){
+        if(player.tintTopLeft == 0xB94CB5) player.anims.play('left-power', true);
+        else player.anims.play('left', true);
+    } 
+    else if (vX > 0){
+        if(player.tintTopLeft == 0xB94CB5) player.anims.play('right-power', true);
+        else player.anims.play('right', true);
+    } 
     else {
         player.setVelocityX(0);
-        player.anims.play('idle', true);
+        if(player.tintTopLeft == 0xB94CB5) player.anims.play('right-power', true);
+        else player.anims.play('idle', true);
     }
 
     // Light: Update the light following the player
